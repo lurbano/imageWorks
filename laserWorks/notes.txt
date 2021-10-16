@@ -1,0 +1,19 @@
+#To crop to a circle
+# https://stackoverflow.com/questions/41959355/how-can-i-combine-these-commands-to-achieve-circular-crop-in-imagemagick
+convert lofi_cali_girl.png -gravity Center \( -size 200x200 xc:Black -fill White -draw 'circle 100 100 100 1' -alpha Copy \) -compose CopyOpacity -composite -trim test.png
+
+
+#hexagon script
+num=6
+rad=150
+diam=$((2*rad))
+offset=30
+ptArr=()
+for ((i=0; i<num; i++)); do
+ang=$((i*360/num + offset))
+xx[$i]=`convert xc: -format "%[fx:$rad*cos($ang*pi/180)+$rad-0.5]" info:`
+yy[$i]=`convert xc: -format "%[fx:$rad*sin($ang*pi/180)+$rad-0.5]" info:`
+ptArr[$i]="${xx[$i]},${yy[$i]}"
+done
+convert -size ${diam}x${diam} xc:black -fill white -draw "polygon ${ptArr[*]}" -alpha off \
+-trim +repage -bordercolor black -border 1 hexagon.gif
