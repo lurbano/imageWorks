@@ -10,13 +10,17 @@ parser.add_argument("-t", "--type", type=str, default="JPG", help = "file type e
 
 args = parser.parse_args()
 
+picdir = args.dir.split('/')[-2]
+
 dir = f'{args.dir}*.{args.type}'
 dir = dir.replace("\\", "")
 
 print("dir: ", dir)
 print("type: ", args.type)
 
-
+outdir = f'{picdir}/'
+print(outdir)
+subprocess.run(f'mkdir {outdir}', shell=True)
 
 files = glob.glob(dir)
 
@@ -27,7 +31,7 @@ for f in files:
     f = f.replace(" ", "\ ")
     print(f)
     outName = f.split("/")[-2] + "_" + f.split("/")[-1]
-    outName = outName.replace(args.type, "png")
+    outName = outdir + outName.replace(args.type, "png")
     print(outName)
     print(f'({n}/{len(files)})')
     subprocess.run(f'convert {f} -resize 2000x2000 {outName}', shell=True)
